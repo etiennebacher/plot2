@@ -1,4 +1,5 @@
 
+
 # Get Started
 
 ## Preliminaries
@@ -34,13 +35,18 @@ plot2(0:10, main = "plot2")
 src="vignettes/get_started.markdown_strict_files/figure-markdown_strict/base_1-1.png"
 style="width:70.0%" />
 
+``` r
+
+par(mfrow = c(1, 1)) # reset layout
+```
+
 Similarly, we can plot elements from a data frame using either the
 atomic or formula methods. Here’s a simple example using the `aq`
 dataset that we created earlier.
 
 ``` r
 # with(aq,  plot2(Day, Temp)) # atomic method (same as below)
-plot2(Temp ~ Day, data = aq) # formula method
+plot2(Temp ~ Day, data = aq)  # formula method
 ```
 
 <img
@@ -164,12 +170,12 @@ palette("tableau")
 In all of the preceding plots, you will have noticed that we get an
 automatic legend. The legend position and look can be customized with
 the `legend` argument. At a minimum, you can pass the familiar legend
-position keywords as a convenience string (“topright”, “left”, etc.).
-Moreover, a key feature of `plot2` is that we can easily and elegantly
-place the legend *outside* the plot area by adding a trailing “!” to
-these keywords. (As you may have realised, the default legend position
-is “right!”.) Let’s demonstrate by moving the legend to the left of the
-plot:
+position keywords as a convenience string (“topright”, “bottom”, “left”,
+etc.). Moreover, a key feature of `plot2` is that we can easily and
+elegantly place the legend *outside* the plot area by adding a trailing
+“!” to these keywords. (As you may have realised, the default legend
+position is “right!”.) Let’s demonstrate by moving the legend to the
+left of the plot:
 
 ``` r
 plot2(
@@ -267,7 +273,8 @@ style="width:70.0%" />
 ## Facets
 
 Alongside the standard “by” grouping approach that we have seen thus
-far, **plot2** also supports faceted plots.
+far, **plot2** also supports faceted plots. Mirroring the main `plot2`
+function, the `facet` argument accepts both atomic and formula methods.
 
 ``` r
 with(
@@ -275,9 +282,10 @@ with(
   plot2(
     x = Day, y = fit,
     ymin = lwr, ymax = upr,
-    facet = Month, ## <- facet, not by
     type = "ribbon",
-    grid = TRUE
+    facet = Month, ## <- facet, not by
+    grid = TRUE,
+    main = "Predicted air temperatures"
   )
 )
 ```
@@ -286,12 +294,39 @@ with(
 src="vignettes/get_started.markdown_strict_files/figure-markdown_strict/facet_simple-1.png"
 style="width:70.0%" />
 
+By default, facets will be arranged in a square configuration if more
+than three facets are detected. Users can override this behaviour by
+supplying `nrow` or `ncol` in the “facet.args” helper function. (The
+margin padding between individual facets can also be adjusted via the
+`fmar` argument.) Note that we can also reduce axis label redundancy by
+turning off the plot frame.
+
+``` r
+with(
+  aq,
+  plot2(
+    x = Day, y = fit,
+    ymin = lwr, ymax = upr,
+    type = "ribbon",
+    facet = Month,
+    facet.args = list(nrow = 1),
+    grid = TRUE, frame = FALSE,
+    main = "Predicted air temperatures"
+  )
+)
+```
+
+<img
+src="vignettes/get_started.markdown_strict_files/figure-markdown_strict/facet_nrow-1.png"
+style="width:70.0%" />
+
 Here’s a slightly fancier version where we combine facets with (by)
-colour grouping, and also add the original values to our model
-predictions. Note that for this particular example, we’ll use the
-`facet = "by"` convenience shorthand to facet along the same month
-variable as the colour grouping. But you can easily specify different
-`by` and `facet` variables if that’s what your data support.
+colour grouping, add a background fill to the facet text, and also add
+back the original values to our model predictions. For this particular
+example, we’ll use the `facet = "by"` convenience shorthand to facet
+along the same month variable as the colour grouping. But you can easily
+specify different `by` and `facet` variables if that’s what your data
+support.
 
 ``` r
 # Plot the original points 
@@ -299,10 +334,11 @@ with(
   aq,
   plot2(
     x = Day, y = Temp,
-    by = Month, facet = "by",
+    by = Month,
+    facet = "by", facet.args = list(bg = "grey90"),
     palette = "dark2",
     grid = TRUE, frame = FALSE, ylim = c(50, 100),
-    main = "Air temperatures and model predictions"
+    main = "Actual and predicted air temperatures"
   )
 )
 # Add the model predictions to the same plot 
@@ -321,6 +357,30 @@ with(
 
 <img
 src="vignettes/get_started.markdown_strict_files/figure-markdown_strict/facet_fancy-1.png"
+style="width:70.0%" />
+
+Again, the `facet` argument also accepts a formula interface. One
+particular use case is for two-sided formulas, which arranges the facet
+layout in a fixed grid arrangement. Here’s a simple (if contrived)
+example.
+
+``` r
+aq$hot = ifelse(aq$Temp>=75, "hot", "cold")
+aq$windy = ifelse(aq$Wind>=15, "windy", "calm")
+
+plot2(
+ Temp ~ Day, data = aq,
+ facet = windy ~ hot,
+ # the rest of these arguments are optional...
+ facet.args = list(col = "white", bg = "black"),
+ pch = 16, col = "dodgerblue",
+ grid = TRUE, frame = FALSE, ylim = c(50, 100),
+ main = "Daily temperatures vs. wind"
+)
+```
+
+<img
+src="vignettes/get_started.markdown_strict_files/figure-markdown_strict/facet_grid-1.png"
 style="width:70.0%" />
 
 ## Customization
