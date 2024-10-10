@@ -163,6 +163,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../vignettes/type.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Plot types</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../vignettes/gallery.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Gallery</span></a>
   </div>
@@ -198,6 +204,54 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <div class="sidebar-item-container"> 
   <a href="../man/tpar.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">tpar</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../man/type_boxplot.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">type_boxplot</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../man/type_errorbar.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">type_errorbar</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../man/type_glm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">type_glm</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../man/type_histogram.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">type_histogram</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../man/type_jitter.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">type_jitter</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../man/type_lm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">type_lm</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../man/type_loess.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">type_loess</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../man/type_polypath.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">type_polypath</span></a>
   </div>
 </li>
       </ul>
@@ -296,6 +350,7 @@ tinyplot(
   empty = FALSE,
   xaxt = NULL,
   yaxt = NULL,
+  flip = FALSE,
   ...
 )
 
@@ -376,7 +431,7 @@ the x and y arguments provide the x and y coordinates for the plot. Any reasonab
 <code id="...">…</code>
 </td>
 <td>
-other graphical parameters (see <code>par</code>), or arguments passed to the relevant plot type (e.g., <code>breaks</code> for <code>type = “histogram”</code>, or <code>varwidth</code> for <code>type = “boxplot”</code>).
+other graphical parameters (see <code>par</code>).
 </td>
 </tr>
 <tr>
@@ -441,25 +496,78 @@ a data.frame (or list) from which the variables in formula should be taken. A ma
 <code id="type">type</code>
 </td>
 <td>
-<p>character string giving the type of plot desired. If no argument is provided, then the plot type will default to something sensible for the type of <code>x</code> and <code>y</code> inputs (i.e., usually <code>“p”</code>). Options are:</p>
+<p>character string or call to a <code style="white-space: pre;">type_*()</code> function giving the type of plot desired.</p>
 <ul>
 <li>
-<p>The same set of 1-character values supported by <code>plot</code>: <code>“p”</code> for points, <code>“l”</code> for lines, <code>“b”</code> for both points and lines, <code>“c”</code> for empty points joined by lines, <code>“o”</code> for overplotted points and lines, <code>“s”</code> and <code>“S”</code> for stair steps, and <code>“h”</code> for histogram-like vertical lines. Specifying <code>“n”</code> produces an empty plot over the extent of the data, but with no internal elements (see also the <code>empty</code> argument below).</p>
+<p>NULL (default): Choose a sensible type for the type of <code>x</code> and <code>y</code> inputs (i.e., usually <code>“p”</code>).</p>
 </li>
 <li>
-<p>Additional tinyplot types:</p>
+<p>1-character values supported by <code>plot</code>:</p>
 <ul>
 <li>
-<p><code>“jitter”</code> (alias <code>“j”</code>) for jittered points.</p>
+<p><code>“p”</code> Points</p>
 </li>
 <li>
-<p><code>“rect”</code>, <code>“segments”</code>, <code>“polygon”</code>, or <code>“polypath”</code>, which are all equivalent to their base counterparts, but don’t require an existing plot window.</p>
+<p><code>“l”</code> Lines</p>
 </li>
 <li>
-<p><code>“boxplot”</code>, <code>“histogram”</code> (alias <code>“hist”</code>), or <code>“density”</code> for distribution plots.</p>
+<p><code>“b”</code> Both points and lines</p>
 </li>
 <li>
-<p><code>“pointrange”</code> or <code>“errorbar”</code> for segment intervals, and <code>“ribbon”</code> or <code>“area”</code> for polygon intervals (where area plots are a special case of ribbon plots with <code>ymin</code> set to 0 and <code>ymax</code> set to <code>y</code>; see below).</p>
+<p><code>“c”</code> Empty points joined by lines</p>
+</li>
+<li>
+<p><code>“o”</code> Overplotted points and lines</p>
+</li>
+<li>
+<p><code>“s”</code> Stair steps</p>
+</li>
+<li>
+<p><code>“S”</code> Stair steps</p>
+</li>
+<li>
+<p><code>“h”</code> Histogram-like vertical lines</p>
+</li>
+<li>
+<p><code>“n”</code> Empty plot over the extent of the data</p>
+</li>
+</ul>
+</li>
+<li>
+<p><code>tinyplot</code> types:</p>
+<ul>
+<li>
+<p><code>“rect”</code>, <code>“segments”</code>, or <code>“polygon”</code>: Equivalent to base <code>R</code></p>
+</li>
+<li>
+<p><code>“density”</code>: Kernel density plot</p>
+</li>
+<li>
+<p><code>“jitter”</code> or <code>type_jitter()</code>: Jittered points</p>
+</li>
+<li>
+<p><code>“polypath”</code> or <code>type_polypath()</code></p>
+</li>
+<li>
+<p><code>“boxplot”</code> or <code>type_boxplot()</code></p>
+</li>
+<li>
+<p><code>“histogram”</code> or <code>type_histogram()</code></p>
+</li>
+<li>
+<p><code>“pointrange”</code> or <code>“errorbar”</code>: segment intervals</p>
+</li>
+<li>
+<p><code>“ribbon”</code> or <code>“area”</code> for polygon intervals (where area plots are a special case of ribbon plots with <code>ymin</code> set to 0 and <code>ymax</code> set to <code>y</code>; see below).</p>
+</li>
+<li>
+<p><code>“lm”</code> or <code>type_lm()</code>: Linear model fit</p>
+</li>
+<li>
+<p><code>“glm”</code> or <code>type_glm()</code>: Generalized linear model fit</p>
+</li>
+<li>
+<p><code>“loess”</code> or <code>type_loess()</code>: Local regression fit</p>
 </li>
 </ul>
 </li>
@@ -758,6 +866,14 @@ character specifying the type of x-axis and y-axis, respectively. See <code>axes
 </tr>
 <tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="flip">flip</code>
+</td>
+<td>
+logical. Should the plot orientation be flipped, so that the y-axis is on the horizontal plane and the x-axis is on the vertical plane? Default is FALSE.
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
 <code id="formula">formula</code>
 </td>
 <td>
@@ -813,8 +929,7 @@ arguments passed to <code>model.frame</code> when extracting the data from <code
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Unlike vanilla plot, however, tinyplot allows you to characterize groups </span></span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># using either the `by` argument or equivalent `|` formula syntax.</span></span>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">with</span>(aq, <span class="fu">tinyplot</span>(Day, Temp, <span class="at">by =</span> Month)) <span class="do">## atomic method</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(Temp <span class="sc">~</span> Day <span class="sc">|</span> Month, <span class="at">data =</span> aq)   <span class="do">## formula method</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">with</span>(aq, <span class="fu">tinyplot</span>(Day, Temp, <span class="at">by =</span> Month)) <span class="do">## atomic method</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -822,23 +937,25 @@ arguments passed to <code>model.frame</code> when extracting the data from <code
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># (Notice that we also get an automatic legend.)</span></span>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(Temp <span class="sc">~</span> Day <span class="sc">|</span> Month, <span class="at">data =</span> aq)   <span class="do">## formula method</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># You can also use the equivalent shorthand `plt()` alias if you'd like to</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># save on a few keystrokes</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plt</span>(Temp <span class="sc">~</span> Day <span class="sc">|</span> Month, <span class="at">data =</span> aq) <span class="do">## shorthand alias</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># (Notice that we also get an automatic legend.)</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># You can also use the equivalent shorthand `plt()` alias if you'd like to</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co"># save on a few keystrokes</span></span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Use standard base plotting arguments to adjust features of your plot.</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co"># For example, change `pch` (plot character) to get filled points and `cex`</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co"># (character expansion) to increase their size.</span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  Temp <span class="sc">~</span> Day <span class="sc">|</span> Month,</span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> aq,</span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">pch =</span> <span class="dv">16</span>,</span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">cex =</span> <span class="dv">2</span></span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="fu">plt</span>(Temp <span class="sc">~</span> Day <span class="sc">|</span> Month, <span class="at">data =</span> aq) <span class="do">## shorthand alias</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Use standard base plotting arguments to adjust features of your plot.</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co"># For example, change `pch` (plot character) to get filled points and `cex`</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co"># (character expansion) to increase their size.</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="fu">tinyplot</span>(</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  Temp <span class="sc">~</span> Day <span class="sc">|</span> Month,</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> aq,</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">pch =</span> <span class="dv">16</span>,</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">cex =</span> <span class="dv">2</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
